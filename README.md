@@ -99,7 +99,6 @@ full run (ICA over ~85 datasets can take hours).
 
 ## Status
 
-These scripts were written for your local Windows MATLAB/EEGLAB and have **not**
-been executed against the dataset here. Treat the first `s00`/`s01` pass as a
+This pipeline was executed against the full ds004117 dataset (23 subjects); see results/ for the exact numerical outputs reported in the associated preprint. Treat the first `s00`/`s01` pass as a
 structure-confirmation step and adjust I/O if your EEGLAB version's BIDS import
 differs. The connectivity and statistics core is the part designed to stay fixed.
