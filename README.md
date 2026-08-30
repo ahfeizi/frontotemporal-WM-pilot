@@ -91,6 +91,9 @@ good/pooled trials; see `s03_connectivity.m`'s `ntr < 5` skip condition and
   maintenance onset, collapsed across load. This is the **pipeline validation**
   figure: it should reproduce canonical WM-related spectral dynamics
   independent of the load contrast.
+- `fig4_topography.png` (from `s10`) — per-channel t-value topography
+  (High−Low) for theta and beta, restricted to the analyzed ROI channels.
+  Exploratory/visual only — the inferential claims come from `s04`/`s06`.
 
 ## Proposal ↔ preprint mapping
 
@@ -128,11 +131,35 @@ associated preprint). Treat the first `s00`/`s01` pass as a structure-confirmati
 step and adjust I/O if your EEGLAB version's BIDS import differs. The
 connectivity and statistics core (`s01`–`s07`) is the part designed to stay fixed.
 
-## Open items (analyses reported in the preprint, not yet in this pipeline)
+## Sub-band, sensitivity, and robustness checks (s08–s16)
 
-The associated preprint (`Preprint_02_revised.docx`) includes several analyses
-beyond what `s00`–`s07` currently produce. These will be added as `s08` onward:
-sub-band split (low-/high-beta), Bayesian/TOST equivalence testing, a wavelet-based
-robustness re-analysis, subject-exclusion and channel-choice sensitivity checks,
-an EMG/myogenic contamination check, a cross-measure permutation test, and the
-behavioral accuracy analysis. See the repo's issues/roadmap for tracking.
+These extend `s01`–`s07` with the additional analyses reported in the revised
+preprint. Independent of one another **except** `s12`, which requires `s09`'s
+output. Run after the core pipeline (`s00`–`s07`) has completed.
+
+```
+s08_site_robustness          % beta power at FCz vs Fz vs Cz              -> fcz_robustness_check.csv
+s09_beta_split_robustness    % full pipeline re-run for low-/high-beta    -> conn_results_betasplit.*, stats_results_betasplit.mat, conn_cluster_results_betasplit.csv
+s10_topography                % per-channel t-value topography (theta/beta) -> fig4_topography.png
+s11_accuracy                  % behavioral accuracy, low vs high load       -> accuracy_by_subject_load.csv, accuracy_stats.mat
+s12_bayes_tost                % BF10/BF01 (JZS) + TOST, main bands + sub-bands (needs s09) -> bayes_tost_expanded.csv
+s13_power_conn_dissociation   % formal test: dz(power) vs dz(connectivity)  -> power_conn_dissociation_test.mat
+s14_amplitude_phase_confound  % power/connectivity-change correlation + amplitude-normalized dwPLI sensitivity check -> amplitude_phase_correlation.mat, conn_results_ampnorm.csv, ampnorm_stats.mat
+s15_emg_sensitivity           % 30-45 Hz (truncated) EMG-band proxy vs beta dwPLI -> emg_band_power.csv, emg_sensitivity_results.mat
+s16_wavelet_beta              % Morlet wavelet re-analysis (13-29 Hz, 9 freqs), replaces Hilbert beta estimate; own BF/TOST -> conn_results_wavelet.*, stats_results_wavelet.mat, bayes_tost_wavelet.csv
+```
+
+**Cross-check before trusting these numbers:** the pooled-beta dwPLI Bayes
+factor should read BF01 ≈ 4.5 from the primary Hilbert-based pipeline
+(`s04`/`s12`) and BF01 ≈ 2.2 from the wavelet re-analysis (`s16`) — matching
+the values already reported in the preprint. If these don't match, something
+in the re-implementation has drifted from what the preprint actually reports.
+
+**Known caveats already documented inline in these scripts (kept here for
+visibility):**
+- `s15`: the EMG-band proxy is truncated to 30–45 Hz because `cfg.lp_hz = 45`
+  removes everything above that; true myogenic power mostly lives higher.
+  Muscle-IC rejection counts are not recoverable without a full `s01` rerun.
+- `s14` Part 2: amplitude normalization is applied per trial window (not to
+  the continuous signal), so this sensitivity check is more exposed to edge
+  effects than the primary pipeline.
