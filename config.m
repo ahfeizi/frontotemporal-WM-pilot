@@ -3,11 +3,10 @@ function cfg = config()
 % Dataset: OpenNeuro ds004117 (Sternberg verbal working memory, hd-EEG).
 % VALUES BELOW ARE NOW SET from the s00_inventory output of this dataset.
 %
-% Run order:  s00_inventory -> s01_preprocess -> s02_epoch -> s03_connectivity
-%             -> s04_stats -> s05_figures
+% For run order and what each script (s00-s16) produces, see README.md.
 % Every script begins with:  cfg = config();
 
-% ---------------- PATHS (Windows -- EDIT to your machine) ----------------
+% --------------------- PATHS (EDIT to your machine) ----------------------
 cfg.bids_dir   = fullfile('..','data','ds004117');           % EDIT to your local path
 cfg.deriv_dir  = fullfile('..','derivatives','ftc');         % EDIT to your local path
 cfg.eeglab_dir = fullfile('..','..','eeglab2023.0');         % EDIT to your EEGLAB install
