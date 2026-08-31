@@ -20,7 +20,7 @@ s02_epoch           % maintenance-window trial list        -> *_trials.mat
 s03_connectivity    % dwPLI + PLV over frontal x temporal   -> conn_results.mat/.csv
 s04_stats           % sign-flip permutation, high vs low    -> stats_results.mat
 s05_figures         % 300-dpi headline figures               -> figures/
-s06_cluster_conn    % FWER max-stat test over full 60-pair x band space
+s06_cluster_conn    % FWER max-stat test over full 60-cell (30 pairs × 2 bands) space
                      %   -> conn_cluster_results.csv, fig3_conn_tmap.png
 s07_grandavg_ersp   % grand-average ERSP at FCz (pipeline validation figure)
                      %   -> grandavg_ersp.mat, fig_grandavg_ersp.png
@@ -77,11 +77,46 @@ good/pooled trials; see `s03_connectivity.m`'s `ntr < 5` skip condition and
   test across the full 60-cell frontal×temporal×band space, so a pair-averaged
   null in `s04` cannot hide a genuinely localized effect.
 
+## Parameter sensitivity
+
+Almost every analytic decision that can move the result is exposed in
+`config.m`, so the pipeline can be re-run under alternative specifications
+without touching the analysis code. The decisions most likely to matter:
+
+- `cfg.filt_order_factor` (=3) — FIR order relative to the lower band edge.
+  This directly sets the time–frequency trade-off of the phase estimate and is
+  the least standardised choice in the whole pipeline.
+- `cfg.roi_frontal` / `cfg.roi_temporal` — which electrodes stand for each
+  region. ROI definition is the largest source of arbitrariness in
+  sensor-space frontotemporal connectivity.
+- `cfg.maint_window` (=[0.5 2.5] s) — shortening it reduces probe-evoked
+  contamination but also reduces the samples entering each phase estimate.
+- `cfg.bands` — theta [4 7] and beta [13 30] are conventional, not
+    data-derived (the wavelet re-analysis in `s16` uses 13–29 Hz).
+- `cfg.amp_thresh` (=150 µV) — per-trial rejection threshold, which changes
+  both trial count and which trials survive.
+- `cfg.load_low` / `cfg.load_high` — set size 3 vs 7, with set size 5 dropped.
+  Including 5 as a third level would change the contrast entirely.
+- dwPLI vs PLV — both are always computed and reported side by side rather
+  than one being selected, since they diverge under volume conduction.
+
+Two caveats, stated plainly: `clean_rawdata` (ASR) settings are currently
+hard-coded in `s01_preprocess.m` rather than exposed here, and line-noise
+removal is off by default (`cfg.line_hz = []`).
+
+All values were fixed a priori and not tuned against the outcome. Several of
+these axes have been varied explicitly rather than only in principle: band
+definition (`s09`, low- vs high-beta), estimator (`s16`, Morlet wavelet in place
+of Hilbert), channel site (`s08`), and amplitude normalization (`s14`). This
+falls short of a formal multiverse — the axes were varied one at a time, not
+crossed — but the single-entry-point design is what made each re-run a change
+to `config.m` rather than a rewrite.
+
 ## Figures
 
 - `fig1_fm_theta.png` / `fig1_fm_power.png` — frontal-midline theta and beta
   power × load. Beta reproduces the headline local load effect; theta serves
-  as a non-significant control. This is your **sanity check**: if the beta
+  as a non-significant control. This is the sanity check: if the beta
   effect is absent, fix preprocessing/epoching before interpreting connectivity.
 - `fig2_ft_dwpli.png` — frontotemporal dwPLI in theta and beta × load.
 - `fig3_conn_tmap.png` (from `s06`) — full frontal×temporal t-map per band,
@@ -101,7 +136,7 @@ good/pooled trials; see `s03_connectivity.m`'s `ntr < 5` skip condition and
 |---|---|---|
 | fig_grandavg_ersp (s07) | shows method reproduces known physiology | §3.2 Pipeline validation |
 | fig1 (power, s05) | local load effect (beta) | §3.3 Results |
-| fig2 (dwPLI × load, s05) | feasibility: the connectivity contrast you propose to manipulate with tACS is measurable | §3.4 Main connectivity result |
+| fig2 (dwPLI × load, s05) | feasibility: the connectivity contrast targeted by the proposed tACS manipulation is measurable | §3.4 Main connectivity result |
 | fig3_conn_tmap + conn_cluster_results.csv (s06) | rules out a diluted localized effect | §3.5 / Supplementary Table S1 |
 | stats_results | quantitative feasibility (effect size powers the proposed design) | Results |
 | this pipeline | "analysis tools already in hand" → Implementation | Methods + shared code |
@@ -119,17 +154,22 @@ good/pooled trials; see `s03_connectivity.m`'s `ntr < 5` skip condition and
   securely confirmed null result**: a wavelet-based robustness re-analysis
   changed its Bayesian support (BF01 dropped from ~4.5 to ~2.2). The claim is
   formally withdrawn in the associated preprint in favor of the sub-band-level
-  result. *(Note: the wavelet re-analysis and sub-band split are not yet part of
-  this pipeline — see the open items below.)*
+  result. *(The wavelet re-analysis and the sub-band split are implemented in `s16` and
+`s09` respectively; see the sub-band and robustness section below.)*
 
 ## Status
 
-This pipeline was executed against the full ds004117 dataset; final statistics
-reflect **N = 22 subjects** after exclusion of subjects with too few pooled
-good trials (see `results/` for the exact numerical outputs reported in the
-associated preprint). Treat the first `s00`/`s01` pass as a structure-confirmation
-step and adjust I/O if your EEGLAB version's BIDS import differs. The
-connectivity and statistics core (`s01`–`s07`) is the part designed to stay fixed.
+Complete and executed end-to-end on the full ds004117 dataset (N = 22 subjects
+after exclusions). The numerical outputs in `results/` are the ones reported in
+the associated manuscript.
+
+Note for re-running elsewhere: BIDS import behaviour differs slightly between
+EEGLAB versions, so `s00_inventory` should be run first to confirm that event
+names and channel labels match what `config.m` expects. The connectivity and
+statistics core (`s03`–`s04`) is version-independent.
+
+The sub-band and robustness scripts (`s08`–`s16`) have likewise been run; their
+outputs are in `results/` and are reported in the revised preprint.
 
 ## Sub-band, sensitivity, and robustness checks (s08–s16)
 
