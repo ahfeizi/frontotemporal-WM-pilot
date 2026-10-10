@@ -188,6 +188,7 @@ s14_amplitude_phase_confound  % power/connectivity-change correlation + amplitud
 s15_emg_sensitivity           % 30-45 Hz (truncated) EMG-band proxy vs beta dwPLI -> emg_band_power.csv, emg_sensitivity_results.mat
 s16_wavelet_beta              % Morlet wavelet re-analysis (13-29 Hz, 9 freqs), replaces Hilbert beta estimate; own BF/TOST -> conn_results_wavelet.*, stats_results_wavelet.mat, bayes_tost_wavelet.csv
 ```
+s17_v2_checks.py   % (Python) sensitivity without sub-024, EMG ratio on analysed N=22, Table S2, design limits at N=22
 
 **Cross-check before trusting these numbers:** the pooled-beta dwPLI Bayes
 factor should read BF01 ≈ 4.5 from the primary Hilbert-based pipeline
