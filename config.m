@@ -64,4 +64,25 @@ cfg.stat.tail   = 0;
 
 % ---------------- FIGURES ----------------
 cfg.fig.dpi = 300;
+
+% =====================================================================
+% ===== BATTERY ADDITIONS (s18_battery.m, s19_battery_check.m) ========
+% Appended for the convergent-validation battery. Nothing above this
+% block was changed. Placed before the closing 'end' because config.m
+% is a function.
+cfg.fieldtrip_dir = fullfile('..','toolboxes','fieldtrip');  % EDIT to your FieldTrip install
+
+cfg.battery.bands.theta     = [4 7];
+cfg.battery.bands.beta      = [13 30];
+cfg.battery.bands.beta_low  = [13 20];    % as s09_beta_split_robustness.m
+cfg.battery.bands.beta_high = [21 30];    % as s09_beta_split_robustness.m
+
+% Morlet centre frequencies per band (per-bin connectivity averaged
+% within band, as s16_wavelet_beta.m)
+cfg.battery.wavelet_freqs.theta     = 4:1:7;
+cfg.battery.wavelet_freqs.beta      = 13:2:29;
+cfg.battery.wavelet_freqs.beta_low  = 13:2:19;
+cfg.battery.wavelet_freqs.beta_high = 21:2:29;
+cfg.battery.n_cycles = 5;                 % as s16_wavelet_beta.m
+% ===== END BATTERY ADDITIONS =========================================
 end

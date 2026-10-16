@@ -204,3 +204,39 @@ visibility):**
 - `s14` Part 2: amplitude normalization is applied per trial window (not to
   the continuous signal), so this sensitivity check is more exposed to edge
   effects than the primary pipeline.
+
+## v1.2.0 - unified validation battery
+
+Crosses measure (PLV, dwPLI, ImC) x decomposition (Hilbert, Morlet wavelet) x
+reference (average, CSD) for theta, beta, low-beta and high-beta. Setup,
+toolboxes and resume behaviour are described in `RUN_battery.md`; Python
+dependencies are pinned in `python/requirements.txt` (Python 3.12).
+
+### Run order
+
+```
+s18_battery                 % per-subject battery values (no stats)          -> battery_persubject.csv, battery_phasediff.csv, battery_phasediff_bins.csv
+s19_battery_check           % regression check of s18 vs s03/s09/s16 output  -> PASS/FAIL printout
+s20_ersp_window_stats       % per-subject FCz ERSP window means + check vs s07 -> ersp_window_stats.csv
+python/unified_table.py     % contrasts + phase-difference summary            -> unified_contrasts.csv, phase_diff_summary.csv, anchor_checks.txt
+python/power_exact.py       % exact sign-flip power load effect (--band theta|beta)
+```
+
+Example: `python python/unified_table.py --p1 <cfg.deriv_dir> --out <dir>` and
+`python python/power_exact.py --band beta`. The ds004117 rows of the unified
+tables are in `results/unified_contrasts_ds004117.csv` and
+`results/phase_diff_summary_ds004117.csv`.
+
+### Corrections in v1.2.0
+
+- The Hilbert-vs-wavelet divergence for pooled-beta dwPLI (BF01 4.47 vs 2.17) is
+  no longer attributed to the narrowband assumption. Across the 24 band x measure x
+  reference comparisons, Hilbert and wavelet estimates differ by up to 0.36 in d_z
+  (mean |delta d_z| = 0.09); |delta BF01| > 1 in 5 of 24, in both directions. The
+  differences do not scale with fractional bandwidth (largest in low beta, near
+  zero in high beta). See unified_contrasts_ds004117.csv.
+- Beta power load effect: exact sign-flip p = 0.017 (previously labelled exact
+  without a stored computation; now computed by power_exact.py), parametric
+  p = 0.037, BF10 = 1.70. Without sub-024: exact p = 0.031, parametric
+  p = 0.057, d_z 95% CI [-0.88, 0.01].
+- JZS prior scale is sqrt(2)/2; the N = 22 BF01 ceiling is 4.49.
