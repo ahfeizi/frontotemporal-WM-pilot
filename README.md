@@ -205,6 +205,16 @@ visibility):**
   the continuous signal), so this sensitivity check is more exposed to edge
   effects than the primary pipeline.
 
+## v1.2.1 - Table S2 script, manuscript figure scripts, ceiling fix
+
+Adds python/unified_table_without_sub024.py and
+results/unified_contrasts_ds004117_without_sub024.csv (validation battery without
+sub-024, N = 21; Supplementary Table S2); adds manuscript/ (scripts for Figures 1-4
+and Supplementary Figure S1 of the merged manuscript); regenerates
+results/design_limits_n22.csv with the shared inference module (BF01 ceiling
+4.4849 -> 4.4854; s17_v2_checks.py section 4 now calls python/util_contrast_stats.py,
+its other outputs unchanged). No other analysis code or result file changed.
+
 ## v1.2.0 - unified validation battery
 
 Crosses measure (PLV, dwPLI, ImC) x decomposition (Hilbert, Morlet wavelet) x

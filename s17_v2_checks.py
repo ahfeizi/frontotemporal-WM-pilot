@@ -14,7 +14,8 @@ Reads only files in results/ and writes four CSVs there:
                                   attainable TOST p (bound d_z = 0.4) at N = 22
 
 p-values here are exact: all 2^n sign-flip permutations are enumerated.
-Bayes factors: one-sample JZS, r = 0.707 (Rouder et al., 2009), as in s12.
+Bayes factors: one-sample JZS, r = 0.707 (Rouder et al., 2009), as in s12; the
+design limits use python/util_contrast_stats.py (r = sqrt(2)/2).
 Power is log-transformed before differencing, as in s04 (cfg.log_power).
 """
 import sys
@@ -81,9 +82,14 @@ s2 = (conn[conn.band == "theta"].pivot(index="subject", columns="load", values="
       [["ntrials_low", "ntrials_high"]])
 s2.to_csv(RES / "trial_counts_by_subject.csv")
 
-# 4. Design limits at N = 22
+# 4. Design limits at N = 22, from the shared inference module (r = sqrt(2)/2, as in
+#    the battery tables); the local r = 0.707 gave a ceiling of 4.4849 instead of 4.4854
+sys.path.insert(0, str(Path(__file__).resolve().parent / "python"))
+import util_contrast_stats as ucs  # noqa: E402
+
 n = conn.subject.nunique()
-pd.DataFrame([dict(n=n, max_BF01=1 / jzs_bf10(0.0, n), min_TOST_p_bound_0p4=tost_p(0.0, n))]
+pd.DataFrame([dict(n=n, max_BF01=1 / ucs.jzs_bf10(0.0, n),
+                   min_TOST_p_bound_0p4=ucs.tost_p(0.0, n))]
              ).to_csv(RES / "design_limits_n22.csv", index=False)
 
 print(pd.read_csv(RES / "sensitivity_without_sub024.csv").round(3).to_string(index=False))
