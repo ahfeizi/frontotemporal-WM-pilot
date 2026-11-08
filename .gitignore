@@ -1,4 +1,8 @@
 *.set
 *.fdt
 derivatives/
-*.asv
+*.asv__pycache__/
+*.pyc
+revision/sim/cache/
+revision/tmp_*.csv
+revision/A_workspace.mat

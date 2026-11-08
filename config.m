@@ -8,7 +8,7 @@ function cfg = config()
 
 % --------------------- PATHS (EDIT to your machine) ----------------------
 cfg.bids_dir   = fullfile('..','data','ds004117');           % EDIT to your local path
-cfg.deriv_dir  = fullfile('..','derivatives','ftc');         % EDIT to your local path
+cfg.deriv_dir  = 'D:\DataSets\Sternberg Working Memory Dataset\ds004117\derivatives\ftc\';         % EDIT to your local path
 cfg.eeglab_dir = fullfile('..','..','eeglab2023.0');         % EDIT to your EEGLAB install
 
 % ---------------- DATASET SUBSET (for a fast first pass) ----------------
@@ -70,7 +70,7 @@ cfg.fig.dpi = 300;
 % Appended for the convergent-validation battery. Nothing above this
 % block was changed. Placed before the closing 'end' because config.m
 % is a function.
-cfg.fieldtrip_dir = fullfile('..','toolboxes','fieldtrip');  % EDIT to your FieldTrip install
+cfg.fieldtrip_dir = 'C:\Users\Amirhossein\Documents\fieldtrip';  % EDIT to your FieldTrip install
 
 cfg.battery.bands.theta     = [4 7];
 cfg.battery.bands.beta      = [13 30];
