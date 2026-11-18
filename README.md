@@ -205,6 +205,35 @@ visibility):**
   the continuous signal), so this sensitivity check is more exposed to edge
   effects than the primary pipeline.
 
+## v1.4.0 - sample-size sensitivity analysis
+
+Adds `revision/brm_sensitivity_power.py` and its outputs
+`revision/brm_sensitivity_power.csv` (one row per dataset x alpha x quantity) and
+`revision/brm_sensitivity_power.md` (summary table). No other file changed.
+
+Both sample sizes were fixed by the original public datasets (ds003702, N = 47;
+ds004117, N = 22), so the script reports what the primary test could detect
+rather than a sample-size calculation. For the two-sided paired t test on d_z it
+computes, analytically from the noncentral t distribution (no random numbers, so
+no seed):
+
+- the minimum detectable d_z at 80%, 90% and 95% power, at alpha = 0.05 and at the
+  first Holm step of each dataset's region-level battery (0.05/24, 0.05/48);
+- power at d_z = 0.2, 0.4, 0.5 and 0.8 at the same alpha levels;
+- the probability that TOST at d_z = +/-0.4 (bounds in sample-SD units, as in
+  `python/util_contrast_stats.tost_p`) declares equivalence when the true d_z is 0.
+
+These are the values in the "Sample size and sensitivity" paragraph of Methods
+2.5 of the manuscript. They were produced by running, from this folder:
+
+```
+python revision/brm_sensitivity_power.py
+```
+
+which writes the two output files next to the script (Python 3.12+, NumPy,
+SciPy; run time under a second). The script covers both datasets because it
+needs only N and the size of each Holm family.
+
 ## v1.2.1 - Table S2 script, manuscript figure scripts, ceiling fix
 
 Adds python/unified_table_without_sub024.py and

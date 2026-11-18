@@ -1,0 +1,31 @@
+dataset,N,alpha,quantity,condition,value
+D1 ds003702,47,0.05,MDE d_z,power 0.80,0.417
+D1 ds003702,47,0.05,MDE d_z,power 0.90,0.483
+D1 ds003702,47,0.05,MDE d_z,power 0.95,0.537
+D1 ds003702,47,0.05,power,d_z 0.2,0.269
+D1 ds003702,47,0.05,power,d_z 0.4,0.766
+D1 ds003702,47,0.05,power,d_z 0.5,0.919
+D1 ds003702,47,0.05,power,d_z 0.8,1.0
+D1 ds003702,47,0.05/24 (Holm step 1),MDE d_z,power 0.80,0.603
+D1 ds003702,47,0.05/24 (Holm step 1),MDE d_z,power 0.90,0.671
+D1 ds003702,47,0.05/24 (Holm step 1),MDE d_z,power 0.95,0.727
+D1 ds003702,47,0.05/24 (Holm step 1),power,d_z 0.2,0.038
+D1 ds003702,47,0.05/24 (Holm step 1),power,d_z 0.4,0.317
+D1 ds003702,47,0.05/24 (Holm step 1),power,d_z 0.5,0.569
+D1 ds003702,47,0.05/24 (Holm step 1),power,d_z 0.8,0.983
+D1 ds003702,47,0.05 per side,TOST equivalence rate at true d_z = 0,bounds +/-0.4,0.707
+D2 ds004117,22,0.05,MDE d_z,power 0.80,0.626
+D2 ds004117,22,0.05,MDE d_z,power 0.90,0.725
+D2 ds004117,22,0.05,MDE d_z,power 0.95,0.807
+D2 ds004117,22,0.05,power,d_z 0.2,0.146
+D2 ds004117,22,0.05,power,d_z 0.4,0.433
+D2 ds004117,22,0.05,power,d_z 0.5,0.609
+D2 ds004117,22,0.05,power,d_z 0.8,0.947
+D2 ds004117,22,0.05/48 (Holm step 1),MDE d_z,power 0.80,1.009
+D2 ds004117,22,0.05/48 (Holm step 1),MDE d_z,power 0.90,1.118
+D2 ds004117,22,0.05/48 (Holm step 1),MDE d_z,power 0.95,1.208
+D2 ds004117,22,0.05/48 (Holm step 1),power,d_z 0.2,0.007
+D2 ds004117,22,0.05/48 (Holm step 1),power,d_z 0.4,0.051
+D2 ds004117,22,0.05/48 (Holm step 1),power,d_z 0.5,0.111
+D2 ds004117,22,0.05/48 (Holm step 1),power,d_z 0.8,0.5
+D2 ds004117,22,0.05 per side,TOST equivalence rate at true d_z = 0,bounds +/-0.4,0.122
